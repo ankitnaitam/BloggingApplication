@@ -27,4 +27,11 @@ public class AppConstants {
 
 	public static final String INVALID_TOKEN = "Invalid Jwt token";
 
+	// ResourceNotFoundException constants
+	public static final String USER_NOT_FOUND = "User not found with user_id :";
+	public static final String POST_NOT_FOUND = "Post not found with post_id :";
+	public static final String CATEGORY_NOT_FOUND = "Category not found with category_id :";
+	public static final String COMMENT_NOT_FOUND = "Comment not found with comment_id :";
+	public static final String USERNAME_NOT_FOUND = "User not found with username :";
+
 }

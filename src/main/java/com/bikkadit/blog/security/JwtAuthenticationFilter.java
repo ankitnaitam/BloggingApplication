@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 
 		} else {
-			log.info("Jwt token does not begin with Bearer");
+			log.warn("Jwt token does not begin with Bearer");
 		}
 
 		// Once we get token we have to validate it

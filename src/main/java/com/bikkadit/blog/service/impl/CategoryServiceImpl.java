@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.bikkadit.blog.entities.Category;
 import com.bikkadit.blog.exceptions.ResourceNotFoundException;
+import com.bikkadit.blog.helper.AppConstants;
 import com.bikkadit.blog.payloads.CategoryDto;
 import com.bikkadit.blog.repositories.CategoryRepo;
 import com.bikkadit.blog.service.CategoryService;
@@ -46,7 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public CategoryDto updateCategory(CategoryDto catDto, Integer categoryId) {
 		log.info("Initiated dao call for update the Category details with categoryId:{}", categoryId);
 		Category category = this.catRepo.findById(categoryId)
-				.orElseThrow(() -> new ResourceNotFoundException("Category ", "Category Id ", categoryId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.CATEGORY_NOT_FOUND + categoryId));
 
 		category.setCategoryTitle(catDto.getCategoryTitle());
 		category.setCategoryDescription(catDto.getCategoryDescription());
@@ -63,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public void deleteCategory(Integer categoryId) {
 		log.info("Initiated dao call for delete the Category details with categoryId:{}", categoryId);
 		Category category = this.catRepo.findById(categoryId)
-				.orElseThrow(() -> new ResourceNotFoundException("Category ", "Category Id ", categoryId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.CATEGORY_NOT_FOUND + categoryId));
 		log.info("Completed dao call for delete the Category details with categoryId:{}", categoryId);
 		this.catRepo.delete(category);
 	}
@@ -76,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public CategoryDto getCategory(Integer categoryId) {
 		log.info("Initiated dao call to get the Category details with categoryId:{}", categoryId);
 		Category category = this.catRepo.findById(categoryId)
-				.orElseThrow(() -> new ResourceNotFoundException("Category ", "Category Id ", categoryId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.CATEGORY_NOT_FOUND + categoryId));
 		log.info("Completed dao call to get the Category details with categoryId:{}", categoryId);
 		return this.modelMapper.map(category, CategoryDto.class);
 	}

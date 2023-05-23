@@ -28,10 +28,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private RoleRepo roleRepo;
 
@@ -42,9 +42,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto registerNewUser(UserDto userDto) {
 		User user = this.modelMapper.map(userDto, User.class);
-		//encode the password
+		// encode the password
 		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-		//roles
+		// roles
 		Role role = this.roleRepo.findById(AppConstants.NORMAL_USER).get();
 		user.getRoles().add(role);
 		User newUser = this.userRepo.save(user);
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
 	public UserDto updateUser(UserDto userDto, Integer userId) {
 		log.info("Initiated dao call for update the User details with userId:{}", userId);
 		User user = this.userRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
 
 		user.setName(userDto.getName());
 		user.setEmail(userDto.getEmail());
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 	public UserDto getUserById(Integer userId) {
 		log.info("Initiated dao call to get the User details with userId:{}", userId);
 		User user = this.userRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
 		log.info("Completed dao call to get the User details with userId:{}", userId);
 		return this.modelMapper.map(user, UserDto.class);
 	}
@@ -114,12 +114,11 @@ public class UserServiceImpl implements UserService {
 	public void deleteUser(Integer userId) {
 		log.info("Initiated dao call for delete the User details with userId:{}", userId);
 		User user = this.userRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
 		log.info("Completed dao call for delete the User details with userId:{}", userId);
 		this.userRepo.delete(user);
 	}
 
-	
 //	private User dtoToUser(UserDto userDto) {
 //		User user = new User();
 //		user.setId(userDto.getId());

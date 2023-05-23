@@ -15,6 +15,7 @@ import com.bikkadit.blog.entities.Category;
 import com.bikkadit.blog.entities.Post;
 import com.bikkadit.blog.entities.User;
 import com.bikkadit.blog.exceptions.ResourceNotFoundException;
+import com.bikkadit.blog.helper.AppConstants;
 import com.bikkadit.blog.payloads.PostDto;
 import com.bikkadit.blog.payloads.PostResponse;
 import com.bikkadit.blog.repositories.CategoryRepo;
@@ -48,9 +49,9 @@ public class PostServiceImpl implements PostService {
 	public PostDto createPost(PostDto postDto, Integer userId, Integer categoryId) {
 		log.info("Initiated dao call for save the Post details with userId:{}, categoryId:{}", userId, categoryId);
 		User user = this.userRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "User Id", userId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
 		Category category = this.categoryRepo.findById(categoryId)
-				.orElseThrow(() -> new ResourceNotFoundException("Category ", "Category ID", categoryId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.CATEGORY_NOT_FOUND + categoryId));
 		Post post = this.modelMapper.map(postDto, Post.class);
 		post.setImageName("default.png");
 		post.setAddedDate(new Date());
@@ -69,7 +70,7 @@ public class PostServiceImpl implements PostService {
 	public PostDto updatePost(PostDto postDto, Integer postId) {
 		log.info("Initiated dao call for update the Post details with postId:{}", postId);
 		Post post = this.postRepo.findById(postId)
-				.orElseThrow(() -> new ResourceNotFoundException("Post", "Post Id", postId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.POST_NOT_FOUND + postId));
 		post.setTitle(postDto.getTitle());
 		post.setContent(postDto.getContent());
 		Post updatedPost = this.postRepo.save(post);
@@ -85,11 +86,11 @@ public class PostServiceImpl implements PostService {
 	public void deletePost(Integer postId) {
 		log.info("Initiated dao call for delete the Post details with postId:{}", postId);
 		Post post = this.postRepo.findById(postId)
-				.orElseThrow(() -> new ResourceNotFoundException("Post", "Post Id", postId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.POST_NOT_FOUND + postId));
 		log.info("Completed dao call for delete the Post details with postId:{}", postId);
 		this.postRepo.delete(post);
 	}
-	
+
 	/**
 	 * @author Ankit
 	 * @implNote This implementation is to get single post data
@@ -98,7 +99,7 @@ public class PostServiceImpl implements PostService {
 	public PostDto getPostById(Integer postId) {
 		log.info("Initiated dao call to get the Post details with postId:{}", postId);
 		Post post = this.postRepo.findById(postId)
-				.orElseThrow(() -> new ResourceNotFoundException("Post", "Post Id", postId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.POST_NOT_FOUND + postId));
 		log.info("Completed dao call to get the Post details with postId:{}", postId);
 		return this.modelMapper.map(post, PostDto.class);
 	}
@@ -146,7 +147,7 @@ public class PostServiceImpl implements PostService {
 	public List<PostDto> getPostsByCategory(Integer categoryId) {
 		log.info("Initiated dao call to get the Post details with categoryId:{}", categoryId);
 		Category category = this.categoryRepo.findById(categoryId)
-				.orElseThrow(() -> new ResourceNotFoundException("Category", "Category Id", categoryId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.CATEGORY_NOT_FOUND + categoryId));
 
 		List<Post> posts = this.postRepo.findByCategory(category);
 
@@ -164,7 +165,7 @@ public class PostServiceImpl implements PostService {
 	public List<PostDto> getPostsByUser(Integer userId) {
 		log.info("Initiated dao call to get the Post details with userId:{}", userId);
 		User user = this.userRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "User Id", userId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
 		List<Post> posts = this.postRepo.findByUser(user);
 		List<PostDto> postDtos = posts.stream().map((post) -> this.modelMapper.map(post, PostDto.class))
 				.collect(Collectors.toList());

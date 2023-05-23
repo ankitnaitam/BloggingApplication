@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.bikkadit.blog.entities.Comment;
 import com.bikkadit.blog.entities.Post;
 import com.bikkadit.blog.exceptions.ResourceNotFoundException;
+import com.bikkadit.blog.helper.AppConstants;
 import com.bikkadit.blog.payloads.CommentDto;
 import com.bikkadit.blog.repositories.CommentRepo;
 import com.bikkadit.blog.repositories.PostRepo;
@@ -35,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
 	public CommentDto createComment(CommentDto commentDto, Integer postId) {
 		log.info("Initiated dao call for save the Comment");
 		Post post = this.postRepo.findById(postId)
-				.orElseThrow(() -> new ResourceNotFoundException("Post", "Post Id", postId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.POST_NOT_FOUND + postId));
 
 		Comment comment = this.modelMapper.map(commentDto, Comment.class);
 		comment.setPost(post);
@@ -52,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
 	public void deleteComment(Integer comId) {
 		log.info("Initiated dao call for delete the Comment");
 		Comment comment = this.commentRepo.findById(comId)
-				.orElseThrow(() -> new ResourceNotFoundException("Comment", "Comment Id", comId));
+				.orElseThrow(() -> new ResourceNotFoundException(AppConstants.COMMENT_NOT_FOUND + comId));
 		log.info("Completed dao call for delete the Comment");
 		this.commentRepo.delete(comment);
 	}
